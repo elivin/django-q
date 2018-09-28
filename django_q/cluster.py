@@ -11,6 +11,7 @@ import socket
 import ast
 from time import sleep
 from multiprocessing import Event, Process, Value, current_process
+from dateutil import tz
 
 # external
 import arrow
@@ -513,6 +514,7 @@ def scheduler(broker=None):
             # set up the next run time
             if not s.schedule_type == s.ONCE:
                 next_run = arrow.get(s.next_run)
+                next_run.tzinfo = tz.tzlocal()
                 while True:
                     if s.schedule_type == s.MINUTES:
                         next_run = next_run.replace(minutes=+(s.minutes or 1))
